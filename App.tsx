@@ -4,7 +4,7 @@ import { Footer } from './components/Footer';
 import { DashboardGrid } from './components/DashboardGrid';
 import { DetailView } from './components/DetailView';
 import { AdvancedAnalyticsView } from './components/AdvancedAnalyticsView';
-import { OvertimeView } from './components/OvertimeView';
+import { MetricDetailView } from './components/MetricDetailView';
 import { ReportGeneratorView } from './components/ReportGeneratorView';
 import { UnderConstructionView } from './components/UnderConstructionView';
 import { LoginPage } from './components/LoginPage';
@@ -75,15 +75,23 @@ const App: React.FC = () => {
     );
   }
 
-  // Render Logic
+  // Render Logic - Route all metric tiles to MetricDetailView
+  const metricIds = [
+    'overtime', 'paid-hours', 'sick-hours', 'worked-hours',
+    'workforce', 'terminations', 'retirements', 'internal-transfers',
+    'vacancy', 'retirement-risk', 'new-hires', 'recruitment'
+  ];
+
   let content;
   if (selectedItem) {
-    if (selectedItem.id === 'overtime') {
-      content = <OvertimeView item={selectedItem} onBack={handleBack} isDarkMode={isDarkMode} />;
-    } else if (currentTab === 'overview') {
-      content = <DetailView item={selectedItem} onBack={handleBack} isDarkMode={isDarkMode} />;
-    } else {
+    // If on analytics tab, show AdvancedAnalyticsView for any metric
+    if (currentTab === 'analytics') {
       content = <AdvancedAnalyticsView item={selectedItem} onBack={handleBack} isDarkMode={isDarkMode} />;
+    } else if (metricIds.includes(selectedItem.id)) {
+      // Overview tab - show MetricDetailView for all metrics
+      content = <MetricDetailView item={selectedItem} onBack={handleBack} isDarkMode={isDarkMode} />;
+    } else {
+      content = <DetailView item={selectedItem} onBack={handleBack} isDarkMode={isDarkMode} />;
     }
   } else {
     if (currentTab === 'overview') {

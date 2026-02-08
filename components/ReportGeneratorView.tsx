@@ -142,7 +142,10 @@ export const ReportGeneratorView: React.FC<ReportGeneratorViewProps> = ({ isDark
 
    const ModuleCheckbox = ({ id, label, checked, onChange }: any) => {
       return (
-         <label className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 cursor-pointer transition-all dark:bg-slate-800 dark:border-slate-700">
+         <label
+            onClick={() => onChange(id)}
+            className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 cursor-pointer transition-all dark:bg-slate-800 dark:border-slate-700"
+         >
             <div className={`w-5 h-5 rounded flex items-center justify-center border-2 transition-all flex-shrink-0 ${checked ? 'bg-[#78be20] border-[#78be20] text-white' : 'border-slate-300 bg-white'}`}>
                {checked && <Check size={12} strokeWidth={3} />}
             </div>
