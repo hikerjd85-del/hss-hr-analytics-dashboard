@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { Breadcrumbs } from './components/Breadcrumbs';
+import { OnboardingTour } from './components/OnboardingTour';
 import { DashboardGrid } from './components/DashboardGrid';
 import { DetailView } from './components/DetailView';
 import { AdvancedAnalyticsView } from './components/AdvancedAnalyticsView';
@@ -20,8 +22,14 @@ const App: React.FC = () => {
   // Search State
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Date Range State
+  const [dateRange, setDateRange] = useState('ytd');
+
   // Theme State
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Onboarding Tour State
+  const [showTour, setShowTour] = useState(false);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -30,6 +38,16 @@ const App: React.FC = () => {
   const handleLogin = (username: string) => {
     setCurrentUser(username);
     setIsAuthenticated(true);
+    // Check if this is first login (no tour completed flag)
+    const tourCompleted = localStorage.getItem('hss-tour-completed');
+    if (!tourCompleted) {
+      setShowTour(true);
+    }
+  };
+
+  const handleTourClose = () => {
+    setShowTour(false);
+    localStorage.setItem('hss-tour-completed', 'true');
   };
 
   const handleLogout = () => {
@@ -133,13 +151,33 @@ const App: React.FC = () => {
           toggleTheme={toggleTheme}
           searchTerm={searchTerm}
           onSearch={setSearchTerm}
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
         />
+
+        {/* Breadcrumbs Navigation */}
+        {selectedItem && (
+          <Breadcrumbs
+            currentTab={currentTab}
+            selectedItem={selectedItem}
+            onNavigateHome={() => { setSelectedItem(null); setCurrentTab('overview'); }}
+            onNavigateTab={(tab) => { setSelectedItem(null); setCurrentTab(tab); }}
+            isDarkMode={isDarkMode}
+          />
+        )}
 
         <main className="flex-grow flex flex-col relative z-10">
           {content}
         </main>
 
         <Footer isDarkMode={isDarkMode} onNavigate={handleFooterNavigation} />
+
+        {/* Onboarding Tour */}
+        <OnboardingTour
+          isOpen={showTour}
+          onClose={handleTourClose}
+          isDarkMode={isDarkMode}
+        />
       </div>
     </div>
   );

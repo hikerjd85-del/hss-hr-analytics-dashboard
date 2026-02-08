@@ -577,97 +577,111 @@ export const AdvancedAnalyticsView: React.FC<AdvancedAnalyticsViewProps> = ({ it
 };
 
 // Dashboard View Component
-const DashboardView = ({ analytics, trendData, accentColor, gridStroke, isDarkMode }: any) => (
-  <div className="space-y-8">
-    {/* AI Briefing */}
-    <div className="bg-gradient-to-br from-indigo-900 via-[#002f56] to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-      <div className="relative z-10">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-white/10 rounded-lg"><Sparkles size={24} className="text-indigo-300" /></div>
-          <div>
-            <h2 className="text-xl font-bold">AI Executive Briefing</h2>
-            <p className="text-indigo-200 text-sm">Real-time analysis based on latest data</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {analytics.insights.map((insight: any, i: number) => (
-            <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/10">
-              <div className="flex justify-between items-start mb-3">
-                <span className={`bg-${insight.color}-500/80 text-white text-[10px] font-bold px-2 py-1 rounded uppercase`}>{insight.type}</span>
-                <ArrowUpRight size={18} className="text-white/50" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">{insight.title}</h3>
-              <p className="text-sm text-indigo-100 leading-relaxed mb-3">{insight.desc}</p>
-              <div className="flex items-center gap-2 text-xs font-medium text-indigo-300">
-                <AlertCircle size={14} /><span>Rec: {insight.rec}</span>
-              </div>
+const DashboardView = ({ analytics, trendData, accentColor, gridStroke, isDarkMode }: any) => {
+  const scrollToCharts = () => {
+    document.getElementById('analytics-charts')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* AI Briefing */}
+      <div className="bg-gradient-to-br from-indigo-900 via-[#002f56] to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-white/10 rounded-lg"><Sparkles size={24} className="text-indigo-300" /></div>
+            <div>
+              <h2 className="text-xl font-bold">AI Executive Briefing</h2>
+              <p className="text-indigo-200 text-sm">Real-time analysis based on latest data</p>
             </div>
-          ))}
-        </div>
-      </div>
-    </div>
-
-    {/* KPIs */}
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {analytics.kpis.map((kpi: any, i: number) => (
-        <div key={i} className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
-          <div className={`absolute top-0 left-0 right-0 h-1 ${kpi.negative ? 'bg-rose-500' : 'bg-emerald-500'}`} />
-          <h4 className="text-xs font-bold text-slate-400 uppercase mb-1">{kpi.label}</h4>
-          <div className="text-2xl font-extrabold text-slate-800 dark:text-white">{kpi.value}</div>
-          <div className={`text-xs font-medium mt-1 flex items-center gap-1 ${kpi.negative ? 'text-rose-500' : 'text-emerald-500'}`}>
-            {kpi.negative ? <TrendingDown size={12} /> : <TrendingUp size={12} />}{kpi.trend}
           </div>
-        </div>
-      ))}
-    </div>
-
-    {/* Charts */}
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-        <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase mb-4">Performance Trend</h3>
-        <div className="h-[280px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridStroke} />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-              <RechartsTooltip />
-              <Area type="monotone" dataKey="Actual" stroke={accentColor} fill={accentColor} fillOpacity={0.1} strokeWidth={2} />
-              <Line type="monotone" dataKey="Target" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
-        <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase mb-4">Risk Factors</h3>
-        <div className="h-[180px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={analytics.riskFactors}>
-              <PolarGrid stroke={gridStroke} />
-              <PolarAngleAxis dataKey="factor" tick={{ fill: '#94a3b8', fontSize: 9 }} />
-              <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#94a3b8', fontSize: 8 }} />
-              <Radar dataKey="score" stroke={accentColor} fill={accentColor} fillOpacity={0.3} strokeWidth={2} />
-            </RadarChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="mt-2 space-y-2">
-          {analytics.riskFactors.map((rf: any, i: number) => (
-            <div key={i} className="flex items-center justify-between text-xs">
-              <span className="text-slate-600 dark:text-slate-400">{rf.factor}</span>
-              <div className="flex items-center gap-2">
-                <div className="w-12 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                  <div className={`h-full rounded-full ${rf.score > 75 ? 'bg-rose-500' : rf.score > 50 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${rf.score}%` }} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {analytics.insights.map((insight: any, i: number) => (
+              <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/10">
+                <div className="flex justify-between items-start mb-3">
+                  <span className={`bg-${insight.color}-500/80 text-white text-[10px] font-bold px-2 py-1 rounded uppercase`}>{insight.type}</span>
+                  <ArrowUpRight size={18} className="text-white/50" />
                 </div>
-                <span className="text-slate-500 w-6">{rf.score}</span>
+                <h3 className="font-bold text-lg mb-2">{insight.title}</h3>
+                <p className="text-sm text-indigo-100 leading-relaxed mb-3">{insight.desc}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-medium text-indigo-300">
+                    <AlertCircle size={14} /><span>Rec: {insight.rec}</span>
+                  </div>
+                  <button
+                    onClick={scrollToCharts}
+                    className="text-[10px] font-bold text-white/60 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-1 rounded transition-colors"
+                  >
+                    Why? →
+                  </button>
+                </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* KPIs */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {analytics.kpis.map((kpi: any, i: number) => (
+          <div key={i} className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
+            <div className={`absolute top-0 left-0 right-0 h-1 ${kpi.negative ? 'bg-rose-500' : 'bg-emerald-500'}`} />
+            <h4 className="text-xs font-bold text-slate-400 uppercase mb-1">{kpi.label}</h4>
+            <div className="text-2xl font-extrabold text-slate-800 dark:text-white">{kpi.value}</div>
+            <div className={`text-xs font-medium mt-1 flex items-center gap-1 ${kpi.negative ? 'text-rose-500' : 'text-emerald-500'}`}>
+              {kpi.negative ? <TrendingDown size={12} /> : <TrendingUp size={12} />}{kpi.trend}
             </div>
-          ))}
+          </div>
+        ))}
+      </div>
+
+      {/* Charts */}
+      <div id="analytics-charts" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+          <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase mb-4">Performance Trend</h3>
+          <div className="h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={trendData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridStroke} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                <RechartsTooltip />
+                <Area type="monotone" dataKey="Actual" stroke={accentColor} fill={accentColor} fillOpacity={0.1} strokeWidth={2} />
+                <Line type="monotone" dataKey="Target" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+          <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase mb-4">Risk Factors</h3>
+          <div className="h-[180px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart data={analytics.riskFactors}>
+                <PolarGrid stroke={gridStroke} />
+                <PolarAngleAxis dataKey="factor" tick={{ fill: '#94a3b8', fontSize: 9 }} />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#94a3b8', fontSize: 8 }} />
+                <Radar dataKey="score" stroke={accentColor} fill={accentColor} fillOpacity={0.3} strokeWidth={2} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-2 space-y-2">
+            {analytics.riskFactors.map((rf: any, i: number) => (
+              <div key={i} className="flex items-center justify-between text-xs">
+                <span className="text-slate-600 dark:text-slate-400">{rf.factor}</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-12 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${rf.score > 75 ? 'bg-rose-500' : rf.score > 50 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${rf.score}%` }} />
+                  </div>
+                  <span className="text-slate-500 w-6">{rf.score}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Written Report View Component
 const WrittenReportView = ({ analytics, isDarkMode }: any) => {

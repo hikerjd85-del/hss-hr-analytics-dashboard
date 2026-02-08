@@ -1,6 +1,8 @@
 import React from 'react';
 import { Search, LayoutGrid, PieChart, LogOut, Sun, Moon, Command, ChevronDown, FileText, Calendar, Download } from 'lucide-react';
 import { ViewTab } from '../types';
+import { DateRangePicker } from './DateRangePicker';
+import { EnhancedSearch } from './EnhancedSearch';
 
 interface HeaderProps {
   currentTab: ViewTab;
@@ -11,6 +13,8 @@ interface HeaderProps {
   toggleTheme: () => void;
   searchTerm: string;
   onSearch: (term: string) => void;
+  dateRange: string;
+  onDateRangeChange: (range: string) => void;
 }
 
 // Correct HSS Icon (Swirling Lines)
@@ -25,7 +29,7 @@ const HSSIcon = () => (
   </svg>
 );
 
-export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onLogout, username, isDarkMode, toggleTheme, searchTerm, onSearch }) => {
+export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onLogout, username, isDarkMode, toggleTheme, searchTerm, onSearch, dateRange, onDateRangeChange }) => {
   const displayName = username ? username.charAt(0).toUpperCase() + username.slice(1) : 'User';
   const initials = displayName.substring(0, 2).toUpperCase();
 
@@ -85,24 +89,26 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onLogou
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
-          {/* Search Bar */}
-          <div className="relative hidden md:block">
-            <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-              <Search size={14} className="text-slate-400" />
-            </div>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => onSearch(e.target.value)}
-              className="w-40 pl-8 pr-2 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#78be20]"
+          {/* Enhanced Search */}
+          <div className="hidden md:block">
+            <EnhancedSearch
+              searchTerm={searchTerm}
+              onSearch={onSearch}
+              isDarkMode={isDarkMode}
             />
           </div>
+
+          {/* Date Range Picker */}
+          <DateRangePicker
+            selectedRange={dateRange}
+            onRangeChange={onDateRangeChange}
+            isDarkMode={isDarkMode}
+          />
 
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
+            className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
           >
             {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>

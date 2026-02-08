@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ArrowRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { DashboardItem } from '../types';
 import { ICON_MAP } from '../constants';
-import { LineChart, Line, ResponsiveContainer, YAxis } from 'recharts';
+import { LineChart, Line, ResponsiveContainer, YAxis, Tooltip } from 'recharts';
 
 interface DashboardTileProps {
   item: DashboardItem;
@@ -10,13 +10,28 @@ interface DashboardTileProps {
   isDarkMode?: boolean;
 }
 
+// Custom Tooltip for Sparkline
+const SparklineTooltip = ({ active, payload, label, chartColor }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-900 text-white text-xs px-2 py-1 rounded shadow-lg border border-slate-700">
+        <span className="font-bold">{payload[0].value.toFixed(0)}</span>
+        <span className="text-slate-400 ml-1">units</span>
+      </div>
+    );
+  }
+  return null;
+};
+
 export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isDarkMode }) => {
   const Icon = ICON_MAP[item.iconName] || ICON_MAP['CreditCard'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
 
-  // Generate random sparkline data for visual effect
+  // Generate random sparkline data with month labels for visual effect
   const sparkData = useMemo(() => {
     return Array.from({ length: 10 }).map((_, i) => ({
-      value: 50 + Math.random() * 50 + (i * 2) // slight upward trend
+      month: months[i],
+      value: Math.round(50 + Math.random() * 50 + (i * 2)) // slight upward trend
     }));
   }, []);
 
@@ -55,7 +70,7 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isD
   const theme = themes[item.theme];
 
   return (
-    <button 
+    <button
       onClick={() => onClick(item)}
       className={`
         group relative flex flex-col p-5 w-full h-[220px]
@@ -74,16 +89,16 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isD
         <div className={`p-3 rounded-xl ${theme.iconBg} ${theme.iconColor} shadow-sm group-hover:scale-105 transition-transform duration-300`}>
           <Icon size={24} strokeWidth={2.5} />
         </div>
-        
-        {/* Trend Indicator */}
+
+        {/* Trend Indicator with Accessibility Icons */}
         <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full bg-white/50 dark:bg-black/20 backdrop-blur-sm border border-slate-100 dark:border-slate-700 ${trendDir === 'up' ? 'text-emerald-600' : trendDir === 'down' ? 'text-rose-500' : 'text-slate-500'}`}>
-           {trendDir === 'up' && <TrendingUp size={12} />}
-           {trendDir === 'down' && <TrendingDown size={12} />}
-           {trendDir === 'flat' && <Minus size={12} />}
-           {trendVal}%
+          {trendDir === 'up' && <TrendingUp size={12} />}
+          {trendDir === 'down' && <TrendingDown size={12} />}
+          {trendDir === 'flat' && <Minus size={12} />}
+          {trendVal}%
         </div>
       </div>
-      
+
       {/* Title Section */}
       <div className="relative z-10 mb-auto">
         <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
@@ -92,28 +107,33 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isD
         <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider mt-1">Real-time Metric</p>
       </div>
 
-      {/* Sparkline Chart */}
+      {/* Interactive Sparkline Chart with Tooltip */}
       <div className="relative z-10 w-full h-12 mt-2 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
-         <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={sparkData}>
-               <Line 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke={theme.chartColor} 
-                  strokeWidth={2} 
-                  dot={false}
-                  isAnimationActive={true} 
-               />
-               <YAxis domain={['dataMin', 'dataMax']} hide />
-            </LineChart>
-         </ResponsiveContainer>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={sparkData}>
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke={theme.chartColor}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4, strokeWidth: 2, fill: theme.chartColor }}
+              isAnimationActive={true}
+            />
+            <YAxis domain={['dataMin', 'dataMax']} hide />
+            <Tooltip
+              content={<SparklineTooltip chartColor={theme.chartColor} />}
+              cursor={{ stroke: theme.chartColor, strokeWidth: 1, strokeDasharray: '3 3' }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
 
       {/* Footer / Action */}
       <div className="relative z-10 w-full mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-700/50 pt-3 opacity-80 group-hover:opacity-100">
         <span className="text-xs font-semibold text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors">View Details</span>
         <div className={`p-1 rounded-full ${theme.iconColor} bg-white/50 dark:bg-slate-700/50 group-hover:translate-x-1 transition-transform`}>
-           <ArrowRight size={14} strokeWidth={3} />
+          <ArrowRight size={14} strokeWidth={3} />
         </div>
       </div>
     </button>

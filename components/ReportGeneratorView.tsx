@@ -240,6 +240,41 @@ export const ReportGeneratorView: React.FC<ReportGeneratorViewProps> = ({ isDark
                      </div>
                   </div>
 
+                  {/* Report Templates Card */}
+                  <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
+                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Quick Templates</h3>
+                     <div className="grid grid-cols-2 gap-2">
+                        <button
+                           onClick={() => setSelectedModules(['executive-summary', 'overtime', 'sick-hours', 'paid-hours', 'worked-hours'])}
+                           className="p-3 text-left rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group"
+                        >
+                           <div className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-[#002f56]">Monthly Ops</div>
+                           <div className="text-[10px] text-slate-400">5 modules</div>
+                        </button>
+                        <button
+                           onClick={() => setSelectedModules(['executive-summary', 'workforce', 'terminations', 'new-hires', 'vacancy', 'recruitment'])}
+                           className="p-3 text-left rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group"
+                        >
+                           <div className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-[#002f56]">Quarterly Review</div>
+                           <div className="text-[10px] text-slate-400">6 modules</div>
+                        </button>
+                        <button
+                           onClick={() => setSelectedModules(['executive-summary', 'vacancy', 'new-hires', 'recruitment', 'internal-transfers'])}
+                           className="p-3 text-left rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group"
+                        >
+                           <div className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-[#002f56]">Recruitment</div>
+                           <div className="text-[10px] text-slate-400">5 modules</div>
+                        </button>
+                        <button
+                           onClick={selectAll}
+                           className="p-3 text-left rounded-lg border border-[#78be20]/30 bg-[#78be20]/5 hover:bg-[#78be20]/10 transition-colors group"
+                        >
+                           <div className="text-xs font-bold text-[#78be20]">Full Brief</div>
+                           <div className="text-[10px] text-slate-400">All modules</div>
+                        </button>
+                     </div>
+                  </div>
+
                   {/* Content Modules Card */}
                   <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
                      <div className="flex items-center justify-between mb-4">
