@@ -140,7 +140,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, isDarkMode, toggl
       </div>
 
       <div className="absolute bottom-6 text-slate-400 text-xs font-medium opacity-60">
-        © 2026 Health & Social Services. HR Intelligence Unit.
+        © 2026 Health Shared Services HRAP
       </div>
     </div>
   );
