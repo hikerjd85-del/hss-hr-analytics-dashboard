@@ -17,15 +17,18 @@ interface HeaderProps {
   onDateRangeChange: (range: string) => void;
 }
 
-// Correct HSS Icon (Swirling Lines)
+// New HSS Logo with rounded curved arcs
 const HSSIcon = () => (
   <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M 5 50 A 45 45 0 0 1 95 50" stroke="#78be20" strokeWidth="12" strokeLinecap="butt" strokeDasharray="141" strokeDashoffset="0" transform="rotate(-15 50 50)" />
-    <path d="M 19 50 A 31 31 0 0 1 81 50" stroke="#78be20" strokeWidth="12" strokeLinecap="butt" strokeDasharray="97" strokeDashoffset="0" transform="rotate(-15 50 50)" />
-    <path d="M 33 50 A 17 17 0 0 1 67 50" stroke="#78be20" strokeWidth="12" strokeLinecap="butt" strokeDasharray="53" strokeDashoffset="0" transform="rotate(-15 50 50)" />
-    <path d="M 95 50 A 45 45 0 0 1 5 50" stroke="#002f56" strokeWidth="12" strokeLinecap="butt" strokeDasharray="141" strokeDashoffset="0" transform="rotate(-15 50 50)" />
-    <path d="M 81 50 A 31 31 0 0 1 19 50" stroke="#002f56" strokeWidth="12" strokeLinecap="butt" strokeDasharray="97" strokeDashoffset="0" transform="rotate(-15 50 50)" />
-    <path d="M 67 50 A 17 17 0 0 1 33 50" stroke="#002f56" strokeWidth="12" strokeLinecap="butt" strokeDasharray="53" strokeDashoffset="0" transform="rotate(-15 50 50)" />
+    {/* Green arcs (top/right) */}
+    <path d="M 18 52 Q 18 18, 52 18 Q 86 18, 86 52" stroke="#78be20" strokeWidth="8" strokeLinecap="round" fill="none" />
+    <path d="M 28 52 Q 28 28, 52 28 Q 76 28, 76 52" stroke="#78be20" strokeWidth="8" strokeLinecap="round" fill="none" />
+    <path d="M 38 52 Q 38 38, 52 38 Q 66 38, 66 52" stroke="#78be20" strokeWidth="8" strokeLinecap="round" fill="none" />
+
+    {/* Blue arcs (bottom/left) */}
+    <path d="M 82 52 Q 82 82, 52 82 Q 22 82, 14 52" stroke="#002f56" strokeWidth="8" strokeLinecap="round" fill="none" />
+    <path d="M 72 52 Q 72 72, 52 72 Q 32 72, 24 52" stroke="#002f56" strokeWidth="8" strokeLinecap="round" fill="none" />
+    <path d="M 62 52 Q 62 62, 52 62 Q 42 62, 34 52" stroke="#002f56" strokeWidth="8" strokeLinecap="round" fill="none" />
   </svg>
 );
 

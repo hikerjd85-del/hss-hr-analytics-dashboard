@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Green arcs (top half) -->
+  <path d="M 15 50 A 35 35 0 0 1 85 50" stroke="#78be20" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M 25 50 A 25 25 0 0 1 75 50" stroke="#78be20" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M 35 50 A 15 15 0 0 1 65 50" stroke="#78be20" stroke-width="8" stroke-linecap="round" fill="none"/>
+  
+  <!-- Blue arcs (bottom half) -->
+  <path d="M 85 50 A 35 35 0 0 1 15 50" stroke="#002f56" stroke-width="8" stroke-linecap="round" fill="none" transform="translate(0, 1)"/>
+  <path d="M 75 50 A 25 25 0 0 1 25 50" stroke="#002f56" stroke-width="8" stroke-linecap="round" fill="none" transform="translate(0, 1)"/>
+  <path d="M 65 50 A 15 15 0 0 1 35 50" stroke="#002f56" stroke-width="8" stroke-linecap="round" fill="none" transform="translate(0, 1)"/>
+</svg>
