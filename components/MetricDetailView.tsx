@@ -342,18 +342,32 @@ const generateMetricData = (itemId: string, filters: any, config: MetricConfig) 
     return { volume, rate, trendData, breakdownData1, breakdownData2, pieData, zones };
 };
 
-// New HSS Logo Small with rounded curved arcs
+// Precise Interlocking HSS Logo Small
 const HSSIconSmall = () => (
     <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Green arcs (top/right) */}
-        <path d="M 18 52 Q 18 18, 52 18 Q 86 18, 86 52" stroke="#78be20" strokeWidth="8" strokeLinecap="round" fill="none" />
-        <path d="M 28 52 Q 28 28, 52 28 Q 76 28, 76 52" stroke="#78be20" strokeWidth="8" strokeLinecap="round" fill="none" />
-        <path d="M 38 52 Q 38 38, 52 38 Q 66 38, 66 52" stroke="#78be20" strokeWidth="8" strokeLinecap="round" fill="none" />
-
-        {/* Blue arcs (bottom/left) */}
-        <path d="M 82 52 Q 82 82, 52 82 Q 22 82, 14 52" stroke="#002f56" strokeWidth="8" strokeLinecap="round" fill="none" />
-        <path d="M 72 52 Q 72 72, 52 72 Q 32 72, 24 52" stroke="#002f56" strokeWidth="8" strokeLinecap="round" fill="none" />
-        <path d="M 62 52 Q 62 62, 52 62 Q 42 62, 34 52" stroke="#002f56" strokeWidth="8" strokeLinecap="round" fill="none" />
+        <defs>
+            <clipPath id="metricLogoClip">
+                <circle cx="50" cy="50" r="50" />
+            </clipPath>
+        </defs>
+        <g clipPath="url(#metricLogoClip)">
+            <g strokeWidth={10} fill="none" strokeLinecap="butt">
+                {/* Top Green Part */}
+                <g stroke="#78be20" transform="translate(0, -1.5)">
+                    <path d="M 43 50 A 7 7 0 0 1 50 43 L 100 43" />
+                    <path d="M 31 50 A 19 19 0 0 1 50 31 L 100 31" />
+                    <path d="M 19 50 A 31 31 0 0 1 50 19 L 100 19" />
+                    <path d="M 7 50 A 43 43 0 0 1 50 7 L 100 7" />
+                </g>
+                {/* Bottom Blue Part */}
+                <g stroke="#002f56" transform="translate(0, 1.5)">
+                    <path d="M 57 50 A 7 7 0 0 1 50 57 L 0 57" />
+                    <path d="M 69 50 A 19 19 0 0 1 50 69 L 0 69" />
+                    <path d="M 81 50 A 31 31 0 0 1 50 81 L 0 81" />
+                    <path d="M 93 50 A 43 43 0 0 1 50 93 L 0 93" />
+                </g>
+            </g>
+        </g>
     </svg>
 );
 
