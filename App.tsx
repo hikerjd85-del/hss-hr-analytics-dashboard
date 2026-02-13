@@ -11,6 +11,7 @@ import { ReportGeneratorView } from './components/ReportGeneratorView';
 import { UnderConstructionView } from './components/UnderConstructionView';
 import { LoginPage } from './components/LoginPage';
 import { DashboardItem, ViewTab } from './types';
+import { Sidebar } from './components/Sidebar';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -138,39 +139,58 @@ const App: React.FC = () => {
 
   return (
     <div className={isDarkMode ? 'dark' : ''}>
-      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-500 relative overflow-x-hidden">
+      <div className="min-h-screen flex bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-500 relative overflow-hidden">
 
-        {/* Background removed for cleaner enterprise look */}
+        {/* Background Gradient */}
+        <div className="fixed inset-0 bg-gradient-to-br from-slate-50 to-blue-50/50 dark:from-slate-900 dark:to-[#001e38] pointer-events-none z-0"></div>
 
-        <Header
+        {/* Sidebar Navigation */}
+        <Sidebar
           currentTab={currentTab}
           onTabChange={handleTabChange}
           onLogout={handleLogout}
           username={currentUser}
-          isDarkMode={isDarkMode}
-          toggleTheme={toggleTheme}
-          searchTerm={searchTerm}
-          onSearch={setSearchTerm}
-          dateRange={dateRange}
-          onDateRangeChange={setDateRange}
         />
 
-        {/* Breadcrumbs Navigation */}
-        {selectedItem && (
-          <Breadcrumbs
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto relative z-10 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
+
+          <Header
             currentTab={currentTab}
-            selectedItem={selectedItem}
-            onNavigateHome={() => { setSelectedItem(null); setCurrentTab('overview'); }}
-            onNavigateTab={(tab) => { setSelectedItem(null); setCurrentTab(tab); }}
+            onTabChange={handleTabChange}
+            onLogout={handleLogout}
+            username={currentUser}
             isDarkMode={isDarkMode}
+            toggleTheme={toggleTheme}
+            searchTerm={searchTerm}
+            onSearch={setSearchTerm}
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
           />
-        )}
 
-        <main className="flex-grow flex flex-col relative z-10">
-          {content}
-        </main>
+          {/* Breadcrumbs Navigation */}
+          {selectedItem && (
+            <div className="px-6 pt-4 pb-0">
+              <Breadcrumbs
+                currentTab={currentTab}
+                selectedItem={selectedItem}
+                onNavigateHome={() => { setSelectedItem(null); setCurrentTab('overview'); }}
+                onNavigateTab={(tab) => { setSelectedItem(null); setCurrentTab(tab); }}
+                isDarkMode={isDarkMode}
+              />
+            </div>
+          )}
 
-        <Footer isDarkMode={isDarkMode} onNavigate={handleFooterNavigation} />
+          <main className="flex-grow p-6 flex flex-col">
+            <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col animate-fade-in relative">
+              {/* Added distinct glow effect behind main content */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-96 bg-blue-400/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+              {content}
+            </div>
+          </main>
+
+          <Footer isDarkMode={isDarkMode} onNavigate={handleFooterNavigation} />
+        </div>
 
         {/* Onboarding Tour */}
         <OnboardingTour
