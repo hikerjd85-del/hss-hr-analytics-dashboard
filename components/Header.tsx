@@ -1,11 +1,14 @@
 import React from 'react';
 import { Search, LayoutGrid, PieChart, LogOut, Sun, Moon, Command, ChevronDown, FileText, Calendar, Download } from 'lucide-react';
-import { ViewTab } from '../types';
+import { ViewTab, ViewMode } from '../types';
 import { DateRangePicker } from './DateRangePicker';
 import { EnhancedSearch } from './EnhancedSearch';
+import { Users, Globe } from 'lucide-react';
 
 interface HeaderProps {
   currentTab: ViewTab;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
   onTabChange: (tab: ViewTab) => void;
   onLogout: () => void;
   username: string;
@@ -18,7 +21,7 @@ interface HeaderProps {
 }
 
 // Minimal Top Bar for Context & Actions
-export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onLogout, username, isDarkMode, toggleTheme, searchTerm, onSearch, dateRange, onDateRangeChange }) => {
+export const Header: React.FC<HeaderProps> = ({ currentTab, viewMode, onViewModeChange, onTabChange, onLogout, username, isDarkMode, toggleTheme, searchTerm, onSearch, dateRange, onDateRangeChange }) => {
 
   return (
     <header className="sticky top-0 z-40 transition-all duration-300">
@@ -39,6 +42,32 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onLogou
 
         {/* Right Actions */}
         <div className="flex items-center gap-3">
+          {/* View Mode Toggle */}
+          <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 border border-slate-200 dark:border-slate-700">
+            <button
+              onClick={() => onViewModeChange('global')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${viewMode === 'global'
+                  ? 'bg-white dark:bg-slate-600 text-slate-800 dark:text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                }`}
+            >
+              <Globe size={14} />
+              Global
+            </button>
+            <button
+              onClick={() => onViewModeChange('team')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${viewMode === 'team'
+                  ? 'bg-white dark:bg-slate-600 text-slate-800 dark:text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                }`}
+            >
+              <Users size={14} />
+              My Team
+            </button>
+          </div>
+
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
+
           {/* Enhanced Search */}
           <div className="hidden md:block w-64 lg:w-96 transition-all">
             <EnhancedSearch

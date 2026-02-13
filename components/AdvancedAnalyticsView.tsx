@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
-  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, AreaChart, Legend
 } from 'recharts';
 import {
   ArrowLeft, Download, Printer, TrendingUp, TrendingDown, Sparkles, AlertCircle,
@@ -576,6 +576,103 @@ export const AdvancedAnalyticsView: React.FC<AdvancedAnalyticsViewProps> = ({ it
   );
 };
 
+// Scenario Simulator Component
+const ScenarioSimulator = ({ accentColor }: { accentColor: string }) => {
+  const [attritionRate, setAttritionRate] = useState(12);
+  const [hiringRate, setHiringRate] = useState(10);
+
+  // Simple calculation for projection
+  const currentHeadcount = 98240;
+  const data = useMemo(() => {
+    let hc = currentHeadcount;
+    return Array.from({ length: 12 }, (_, i) => {
+      const attrition = hc * (attritionRate / 100 / 12);
+      const hires = hc * (hiringRate / 100 / 12);
+      hc = hc - attrition + hires;
+      return {
+        month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
+        Headcount: Math.round(hc),
+        Baseline: Math.round(currentHeadcount * (1 + (i * 0.001))) // Slight natural growth
+      };
+    });
+  }, [attritionRate, hiringRate]);
+
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg">
+          <Sparkles size={20} />
+        </div>
+        <div>
+          <h3 className="text-lg font-bold text-slate-800 dark:text-white">Workforce Scenario Simulator</h3>
+          <p className="text-xs text-slate-500">Project headcount based on varying attrition and hiring rates.</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Controls */}
+        <div className="space-y-6 bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-100 dark:border-slate-700">
+
+          <div>
+            <div className="flex justify-between mb-2">
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Annual Attrition Rate</label>
+              <span className="text-sm font-bold text-rose-500">{attritionRate}%</span>
+            </div>
+            <input
+              type="range" min="5" max="25" step="0.5"
+              value={attritionRate}
+              onChange={(e) => setAttritionRate(parseFloat(e.target.value))}
+              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-rose-500"
+            />
+            <p className="text-[10px] text-slate-400 mt-1">Impacts outflow of staff.</p>
+          </div>
+
+          <div>
+            <div className="flex justify-between mb-2">
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Hiring Velocity</label>
+              <span className="text-sm font-bold text-emerald-500">{hiringRate}%</span>
+            </div>
+            <input
+              type="range" min="5" max="25" step="0.5"
+              value={hiringRate}
+              onChange={(e) => setHiringRate(parseFloat(e.target.value))}
+              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+            />
+            <p className="text-[10px] text-slate-400 mt-1">Impacts inflow of new staff.</p>
+          </div>
+
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-600">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-slate-500">Projected Delta</span>
+              <span className={`text-lg font-bold ${hiringRate >= attritionRate ? 'text-emerald-500' : 'text-rose-500'}`}>
+                {hiringRate >= attritionRate ? '+' : ''}{((hiringRate - attritionRate)).toFixed(1)}%
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Chart */}
+        <div className="lg:col-span-2 h-[250px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10 }} />
+              <YAxis domain={['auto', 'auto']} axisLine={false} tickLine={false} tick={{ fontSize: 10 }} />
+              <RechartsTooltip
+                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              />
+              <Legend />
+              <Area type="monotone" dataKey="Headcount" stroke={accentColor} fill={accentColor} fillOpacity={0.1} strokeWidth={3} />
+              <Area type="monotone" dataKey="Baseline" stroke="#94a3b8" fill="none" strokeDasharray="5 5" strokeWidth={2} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Dashboard View Component
 const DashboardView = ({ analytics, trendData, accentColor, gridStroke, isDarkMode }: any) => {
   const scrollToCharts = () => {
@@ -586,6 +683,7 @@ const DashboardView = ({ analytics, trendData, accentColor, gridStroke, isDarkMo
     <div className="space-y-8">
       {/* AI Briefing */}
       <div className="bg-gradient-to-br from-indigo-900 via-[#002f56] to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+        {/* ... existing AI Briefing code ... */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-6">
@@ -621,18 +719,24 @@ const DashboardView = ({ analytics, trendData, accentColor, gridStroke, isDarkMo
         </div>
       </div>
 
-      {/* KPIs */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {analytics.kpis.map((kpi: any, i: number) => (
-          <div key={i} className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
-            <div className={`absolute top-0 left-0 right-0 h-1 ${kpi.negative ? 'bg-rose-500' : 'bg-emerald-500'}`} />
-            <h4 className="text-xs font-bold text-slate-400 uppercase mb-1">{kpi.label}</h4>
-            <div className="text-2xl font-extrabold text-slate-800 dark:text-white">{kpi.value}</div>
-            <div className={`text-xs font-medium mt-1 flex items-center gap-1 ${kpi.negative ? 'text-rose-500' : 'text-emerald-500'}`}>
-              {kpi.negative ? <TrendingDown size={12} /> : <TrendingUp size={12} />}{kpi.trend}
+      {/* PCBs & Simulator Row */}
+      <div className="space-y-6">
+        {/* KPIs */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {analytics.kpis.map((kpi: any, i: number) => (
+            <div key={i} className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
+              <div className={`absolute top-0 left-0 right-0 h-1 ${kpi.negative ? 'bg-rose-500' : 'bg-emerald-500'}`} />
+              <h4 className="text-xs font-bold text-slate-400 uppercase mb-1">{kpi.label}</h4>
+              <div className="text-2xl font-extrabold text-slate-800 dark:text-white">{kpi.value}</div>
+              <div className={`text-xs font-medium mt-1 flex items-center gap-1 ${kpi.negative ? 'text-rose-500' : 'text-emerald-500'}`}>
+                {kpi.negative ? <TrendingDown size={12} /> : <TrendingUp size={12} />}{kpi.trend}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Simulator */}
+        <ScenarioSimulator accentColor={accentColor} />
       </div>
 
       {/* Charts */}
@@ -645,7 +749,7 @@ const DashboardView = ({ analytics, trendData, accentColor, gridStroke, isDarkMo
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridStroke} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                <RechartsTooltip />
+                <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
                 <Area type="monotone" dataKey="Actual" stroke={accentColor} fill={accentColor} fillOpacity={0.1} strokeWidth={2} />
                 <Line type="monotone" dataKey="Target" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
               </ComposedChart>

@@ -10,7 +10,7 @@ import { MetricDetailView } from './components/MetricDetailView';
 import { ReportGeneratorView } from './components/ReportGeneratorView';
 import { UnderConstructionView } from './components/UnderConstructionView';
 import { LoginPage } from './components/LoginPage';
-import { DashboardItem, ViewTab } from './types';
+import { DashboardItem, ViewTab, ViewMode } from './types';
 import { Sidebar } from './components/Sidebar';
 
 const App: React.FC = () => {
@@ -18,6 +18,7 @@ const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState('');
   const [selectedItem, setSelectedItem] = useState<DashboardItem | null>(null);
   const [currentTab, setCurrentTab] = useState<ViewTab>('overview');
+  const [viewMode, setViewMode] = useState<ViewMode>('global');
   const [constructionPageTitle, setConstructionPageTitle] = useState('');
 
   // Search State
@@ -157,6 +158,8 @@ const App: React.FC = () => {
 
           <Header
             currentTab={currentTab}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
             onTabChange={handleTabChange}
             onLogout={handleLogout}
             username={currentUser}

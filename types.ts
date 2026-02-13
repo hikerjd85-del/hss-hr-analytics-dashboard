@@ -1,6 +1,7 @@
 export type CategoryTheme = 'orange' | 'green' | 'purple';
 
 export type ViewTab = 'overview' | 'analytics' | 'reports' | 'construction';
+export type ViewMode = 'global' | 'team';
 
 export interface DashboardItem {
   id: string;

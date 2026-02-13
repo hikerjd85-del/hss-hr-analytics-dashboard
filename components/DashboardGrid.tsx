@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DashboardTile } from './DashboardTile';
 import { DashboardItem } from '../types';
+import { MorningBriefing } from './MorningBriefing';
 import { DASHBOARD_ITEMS } from '../constants';
 import { OPERATIONAL_ALERTS, EXECUTIVE_BRIEFINGS } from '../data/mockData';
 import {
@@ -47,6 +48,11 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({
 
    return (
       <div className="max-w-7xl mx-auto px-6 py-8 animate-fade-in">
+
+         {/* Smart Contextual Insights ("Morning Briefing") */}
+         {title === 'Overview' && !searchTerm && (
+            <MorningBriefing username="Admin" /> // TODO: Pass username prop
+         )}
 
          {/* Title Section with improved Typography */}
          {!searchTerm && (
