@@ -9,7 +9,7 @@ interface OnboardingTourProps {
 
 const TOUR_STEPS = [
     {
-        title: 'Welcome to HSS People Analytics',
+        title: 'Welcome to [Organization Name] People Analytics',
         description: 'Your centralized hub for workforce intelligence and HR metrics. Let\'s take a quick tour of the key features.',
         icon: Sparkles,
         highlight: 'header'

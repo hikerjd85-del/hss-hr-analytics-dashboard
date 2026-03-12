@@ -1,7 +1,6 @@
-import React from 'react';
-import { Search, LayoutGrid, PieChart, LogOut, Sun, Moon, Command, ChevronDown, FileText, Calendar, Download } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Sun, Moon, X, Calendar } from 'lucide-react';
 import { ViewTab, ViewMode } from '../types';
-import { DateRangePicker } from './DateRangePicker';
 import { EnhancedSearch } from './EnhancedSearch';
 import { Users, Globe } from 'lucide-react';
 
@@ -20,8 +19,16 @@ interface HeaderProps {
   onDateRangeChange: (range: string) => void;
 }
 
-// Minimal Top Bar for Context & Actions
+const DATE_PRESETS = ['YTD', 'Q4', 'Q3', 'Last Month', 'Custom'];
+
 export const Header: React.FC<HeaderProps> = ({ currentTab, viewMode, onViewModeChange, onTabChange, onLogout, username, isDarkMode, toggleTheme, searchTerm, onSearch, dateRange, onDateRangeChange }) => {
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [themeKey, setThemeKey] = useState(0);
+
+  const handleThemeToggle = () => {
+    setThemeKey(prev => prev + 1);
+    toggleTheme();
+  };
 
   return (
     <header className="sticky top-0 z-40 transition-all duration-300">
@@ -68,47 +75,77 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, viewMode, onViewMode
 
           <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
 
-          {/* Enhanced Search */}
+          {/* Desktop Search */}
           <div className="hidden md:block w-64 lg:w-96 transition-all">
-            <EnhancedSearch
-              searchTerm={searchTerm}
-              onSearch={onSearch}
-              isDarkMode={isDarkMode}
-            />
+            <EnhancedSearch searchTerm={searchTerm} onSearch={onSearch} isDarkMode={isDarkMode} />
           </div>
 
-          <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
-
-          {/* Date Range Picker */}
-          <DateRangePicker
-            selectedRange={dateRange}
-            onRangeChange={onDateRangeChange}
-            isDarkMode={isDarkMode}
-          />
-
-          {/* Theme Toggle */}
+          {/* Mobile Search Icon */}
           <button
-            onClick={toggleTheme}
+            onClick={() => setMobileSearchOpen(true)}
+            className="md:hidden p-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all"
+          >
+            <Search size={18} />
+          </button>
+
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1 hidden md:block"></div>
+
+          {/* Inline Date Presets */}
+          <div className="hidden lg:flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-lg p-1 border border-slate-200 dark:border-slate-700">
+            <Calendar size={14} className="text-slate-400 mx-1" />
+            {DATE_PRESETS.map(preset => (
+              <button
+                key={preset}
+                onClick={() => onDateRangeChange(preset.toLowerCase())}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${dateRange === preset.toLowerCase()
+                    ? 'bg-white dark:bg-slate-600 text-slate-800 dark:text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                  }`}
+              >
+                {preset}
+              </button>
+            ))}
+          </div>
+
+          {/* Theme Toggle with animation */}
+          <button
+            onClick={handleThemeToggle}
             className="p-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all active:scale-95"
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
-            {isDarkMode ? <Sun size={18} className="text-yellow-400" /> : <Moon size={18} />}
+            <div className="theme-icon-enter" key={themeKey}>
+              {isDarkMode ? <Sun size={18} className="text-yellow-400" /> : <Moon size={18} />}
+            </div>
           </button>
 
         </div>
       </div>
+
+      {/* Mobile Search Overlay */}
+      {mobileSearchOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-start justify-center pt-20 px-4 animate-fade-in">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-4 animate-slide-up">
+            <div className="flex items-center gap-3 mb-3">
+              <Search size={20} className="text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search metrics, reports, analytics..."
+                value={searchTerm}
+                onChange={(e) => onSearch(e.target.value)}
+                autoFocus
+                className="flex-1 text-lg font-medium text-slate-800 dark:text-white bg-transparent outline-none placeholder-slate-400"
+              />
+              <button
+                onClick={() => setMobileSearchOpen(false)}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+              >
+                <X size={20} className="text-slate-500" />
+              </button>
+            </div>
+            <div className="text-xs text-slate-400 px-1">Press Esc to close</div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
-
-const TabButton = ({ active, onClick, icon: Icon, label }: any) => (
-  <button
-    onClick={onClick}
-    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${active
-      ? 'text-[#002f56] bg-white shadow-sm'
-      : 'text-slate-500 hover:text-slate-700'}`}
-  >
-    <Icon size={14} className={active ? 'text-[#78be20]' : ''} />
-    {label}
-  </button>
-);

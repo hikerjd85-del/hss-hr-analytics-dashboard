@@ -40,16 +40,12 @@ const App: React.FC = () => {
   const handleLogin = (username: string) => {
     setCurrentUser(username);
     setIsAuthenticated(true);
-    // Check if this is first login (no tour completed flag)
-    const tourCompleted = localStorage.getItem('hss-tour-completed');
-    if (!tourCompleted) {
-      setShowTour(true);
-    }
+    // Always show the tour on login
+    setShowTour(true);
   };
 
   const handleTourClose = () => {
     setShowTour(false);
-    localStorage.setItem('hss-tour-completed', 'true');
   };
 
   const handleLogout = () => {
@@ -185,10 +181,12 @@ const App: React.FC = () => {
           )}
 
           <main className="flex-grow p-6 flex flex-col">
-            <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col animate-fade-in relative">
+            <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col relative" key={currentTab + (selectedItem?.id || '')}>
               {/* Added distinct glow effect behind main content */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-96 bg-blue-400/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
-              {content}
+              <div className="page-transition">
+                {content}
+              </div>
             </div>
           </main>
 

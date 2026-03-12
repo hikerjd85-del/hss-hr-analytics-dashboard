@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { ArrowRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { DashboardItem } from '../types';
 import { ICON_MAP } from '../constants';
@@ -14,7 +14,7 @@ interface DashboardTileProps {
 const SparklineTooltip = ({ active, payload, label, chartColor }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-900 text-white text-xs px-2 py-1 rounded shadow-lg border border-slate-700">
+      <div className="bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg shadow-xl border border-slate-700 backdrop-blur-md">
         <span className="font-bold">{payload[0].value.toFixed(0)}</span>
         <span className="text-slate-400 ml-1">units</span>
       </div>
@@ -26,6 +26,12 @@ const SparklineTooltip = ({ active, payload, label, chartColor }: any) => {
 export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isDarkMode }) => {
   const Icon = ICON_MAP[item.iconName] || ICON_MAP['CreditCard'];
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Generate random sparkline data with month labels for visual effect
   const sparkData = useMemo(() => {
@@ -38,6 +44,10 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isD
   // Determine random trend
   const trendDir = useMemo(() => Math.random() > 0.4 ? 'up' : Math.random() > 0.2 ? 'down' : 'flat', []);
   const trendVal = useMemo(() => (Math.random() * 5).toFixed(1), []);
+  const updateTime = useMemo(() => {
+    const minutes = Math.floor(Math.random() * 30) + 1;
+    return `${minutes}m ago`;
+  }, []);
 
   // Modern Theme Configuration with Gradients
   const themes = {
@@ -90,8 +100,14 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isD
           <Icon size={24} strokeWidth={2.5} />
         </div>
 
-        {/* Trend Indicator with Accessibility Icons */}
-        <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full bg-white/50 dark:bg-black/20 backdrop-blur-sm border border-slate-100 dark:border-slate-700 ${trendDir === 'up' ? 'text-emerald-600' : trendDir === 'down' ? 'text-rose-500' : 'text-slate-500'}`}>
+        {/* Trend Indicator — bolder for negative */}
+        <div className={`flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full border transition-all ${
+          trendDir === 'up' 
+            ? 'text-emerald-600 bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400' 
+            : trendDir === 'down' 
+            ? 'text-rose-600 bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-400' 
+            : 'text-slate-500 bg-slate-50 border-slate-200 dark:bg-slate-800 dark:border-slate-700'
+        }`}>
           {trendDir === 'up' && <TrendingUp size={12} />}
           {trendDir === 'down' && <TrendingDown size={12} />}
           {trendDir === 'flat' && <Minus size={12} />}
@@ -104,13 +120,19 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isD
         <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
           {item.title}
         </h3>
-        <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider mt-1">Real-time Metric</p>
+        <p className="text-[10px] text-slate-400 font-medium mt-1">Updated {updateTime}</p>
       </div>
 
-      {/* Interactive Sparkline Chart with Tooltip */}
+      {/* Interactive Sparkline Chart — animated draw-in */}
       <div className="relative z-10 w-full h-12 mt-2 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={sparkData}>
+            <defs>
+              <linearGradient id={`gradient-${item.id}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={theme.chartColor} stopOpacity={0.3} />
+                <stop offset="100%" stopColor={theme.chartColor} stopOpacity={0} />
+              </linearGradient>
+            </defs>
             <Line
               type="monotone"
               dataKey="value"
@@ -119,6 +141,8 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({ item, onClick, isD
               dot={false}
               activeDot={{ r: 4, strokeWidth: 2, fill: theme.chartColor }}
               isAnimationActive={true}
+              animationDuration={1500}
+              animationEasing="ease-out"
             />
             <YAxis domain={['dataMin', 'dataMax']} hide />
             <Tooltip

@@ -9,32 +9,17 @@ interface SidebarProps {
     username: string;
 }
 
-// Precise Interlocking HSS Logo
-const HSSIcon = () => (
+// Organization Logo
+const OrgIcon = () => (
     <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <clipPath id="sidebarLogoClip">
-                <circle cx="50" cy="50" r="50" />
-            </clipPath>
-        </defs>
-        <g clipPath="url(#sidebarLogoClip)">
-            <g strokeWidth={10} fill="none" strokeLinecap="butt">
-                {/* Top Green Part */}
-                <g stroke="#78be20" transform="translate(0, -1.5)">
-                    <path d="M 43 50 A 7 7 0 0 1 50 43 L 100 43" />
-                    <path d="M 31 50 A 19 19 0 0 1 50 31 L 100 31" />
-                    <path d="M 19 50 A 31 31 0 0 1 50 19 L 100 19" />
-                    <path d="M 7 50 A 43 43 0 0 1 50 7 L 100 7" />
-                </g>
-                {/* Bottom Blue Part */}
-                <g stroke="#002f56" transform="translate(0, 1.5)">
-                    <path d="M 57 50 A 7 7 0 0 1 50 57 L 0 57" />
-                    <path d="M 69 50 A 19 19 0 0 1 50 69 L 0 69" />
-                    <path d="M 81 50 A 31 31 0 0 1 50 81 L 0 81" />
-                    <path d="M 93 50 A 43 43 0 0 1 50 93 L 0 93" />
-                </g>
-            </g>
-        </g>
+        <rect x="20" y="40" width="25" height="40" rx="4" fill="#10b981" />
+        <rect x="50" y="20" width="30" height="60" rx="4" fill="#3b82f6" />
+        <circle cx="32.5" cy="25" r="8" fill="#f59e0b" />
+        <rect x="60" y="35" width="10" height="5" rx="2" fill="white" />
+        <rect x="60" y="50" width="10" height="5" rx="2" fill="white" />
+        <rect x="60" y="65" width="10" height="5" rx="2" fill="white" />
+        <rect x="27.5" y="55" width="10" height="5" rx="2" fill="white" />
+        <rect x="27.5" y="65" width="10" height="5" rx="2" fill="white" />
     </svg>
 );
 
@@ -62,12 +47,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onTabChange, onLog
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full blur-[100px] opacity-10 -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
 
             {/* Logo Area */}
-            <div className="p-6 pb-8 flex items-center gap-3 relative z-10">
+            <div className="p-6 pb-10 flex items-center gap-3 relative z-10">
                 <div className="bg-white rounded-full p-1 shadow-lg shrink-0">
-                    <HSSIcon />
+                    <OrgIcon />
                 </div>
                 <div>
-                    <h1 className="font-bold text-lg leading-tight tracking-tight text-white">Health Shared <br /><span className="text-[#78be20]">Services</span></h1>
+                    <h1 className="font-bold text-lg leading-tight tracking-tight text-white">[Organization <br /><span className="text-blue-400">Name]</span></h1>
                 </div>
             </div>
 
@@ -79,11 +64,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onTabChange, onLog
                         <button
                             key={item.id}
                             onClick={() => onTabChange(item.id as ViewTab)}
-                            className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all group ${currentTab === item.id
+                            className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all group relative ${currentTab === item.id
                                     ? 'bg-gradient-to-r from-[#78be20] to-[#5da310] text-white shadow-lg shadow-green-900/20'
                                     : 'text-blue-100/70 hover:bg-white/10 hover:text-white'
                                 }`}
                         >
+                            {/* Left edge accent bar for active tab */}
+                            {currentTab === item.id && (
+                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full shadow-lg shadow-white/30" />
+                            )}
                             <item.icon size={20} className={`${currentTab === item.id ? 'text-white' : 'text-blue-300 group-hover:text-white transition-colors'}`} />
                             <span className="flex-1 text-left">{item.label}</span>
                             {currentTab === item.id && <ChevronRight size={14} className="opacity-80" />}
@@ -94,37 +83,41 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onTabChange, onLog
                 <div className="mb-6">
                     <p className="px-3 text-[10px] font-bold text-blue-200/50 uppercase tracking-widest mb-3">Workspace</p>
                     {secondaryNav.map((item) => (
-                        <button
+                        <div
                             key={item.id}
-                            onClick={() => onTabChange('construction')}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-100/70 hover:bg-white/5 hover:text-white transition-all group"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-100/40 cursor-default group"
                         >
-                            <item.icon size={18} className="text-blue-300/70 group-hover:text-white transition-colors" />
+                            <item.icon size={18} className="text-blue-300/40" />
                             <span className="flex-1 text-left">{item.label}</span>
-                        </button>
+                            <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 text-blue-300/50 border border-white/5">Soon</span>
+                        </div>
                     ))}
                 </div>
 
                 <div>
                     <p className="px-3 text-[10px] font-bold text-blue-200/50 uppercase tracking-widest mb-3">System</p>
                     {bottomNav.map((item) => (
-                        <button
+                        <div
                             key={item.id}
-                            onClick={() => onTabChange('construction')}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-100/70 hover:bg-white/5 hover:text-white transition-all group"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-100/40 cursor-default group"
                         >
-                            <item.icon size={18} className="text-blue-300/70 group-hover:text-white transition-colors" />
+                            <item.icon size={18} className="text-blue-300/40" />
                             <span className="flex-1 text-left">{item.label}</span>
-                        </button>
+                            <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 text-blue-300/50 border border-white/5">Soon</span>
+                        </div>
                     ))}
                 </div>
             </div>
 
-            {/* User Footer */}
+            {/* User Footer with Online Status */}
             <div className="p-4 m-4 bg-[#001e38]/50 rounded-2xl border border-white/5 relative z-10 backdrop-blur-sm">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-sm font-bold shadow-lg text-white ring-2 ring-white/10">
-                        {username.substring(0, 2).toUpperCase()}
+                    <div className="relative">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-sm font-bold shadow-lg text-white ring-2 ring-white/10">
+                            {username.substring(0, 2).toUpperCase()}
+                        </div>
+                        {/* Online indicator */}
+                        <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-[#001e38]" />
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-white truncate">{username}</p>

@@ -22,7 +22,7 @@ interface DashboardGridProps {
 export const DashboardGrid: React.FC<DashboardGridProps> = ({
    onItemClick,
    title = "Overview",
-   description = "Access key performance indicators and workforce trends across Health & Social Services (HSS).",
+   description = "Access key performance indicators and workforce trends across [Organization Name].",
    isDarkMode,
    showOrgBanner = false,
    showAIBriefing = false,
@@ -104,6 +104,32 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({
                      ))}
                   </div>
                )}
+            </div>
+         )}
+
+         {/* --- EXECUTIVE KPI SUMMARY BAR --- */}
+         {showAIBriefing && !searchTerm && (
+            <div className="mb-10 grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in">
+               {[
+                  { label: 'Total Headcount', value: '4,231', change: '+2.3%', prev: '4,136', positive: true },
+                  { label: 'Turnover Rate', value: '8.7%', change: '-1.2%', prev: '9.9%', positive: true },
+                  { label: 'Overtime Cost', value: '$2.4M', change: '+5.1%', prev: '$2.28M', positive: false },
+                  { label: 'Time-to-Fill', value: '42 days', change: '-6.7%', prev: '45 days', positive: true },
+               ].map((kpi, i) => (
+                  <div key={i} className="relative bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group overflow-hidden">
+                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#002f56] to-blue-400 opacity-60"></div>
+                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">{kpi.label}</p>
+                     <div className="flex items-end gap-2 mb-2">
+                        <span className="text-3xl font-extrabold text-slate-800 dark:text-white count-up">{kpi.value}</span>
+                     </div>
+                     <div className="flex items-center gap-2">
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${kpi.positive ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'}`}>
+                           {kpi.change}
+                        </span>
+                        <span className="text-[10px] text-slate-400">vs Q3: {kpi.prev}</span>
+                     </div>
+                  </div>
+               ))}
             </div>
          )}
 

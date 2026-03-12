@@ -16,31 +16,16 @@ interface ReportGeneratorViewProps {
 }
 
 // Precise Interlocking HSS Logo for Reports
-const ReportLogo = () => (
+const OrgLogo = () => (
    <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-         <clipPath id="reportLogoClip">
-            <circle cx="50" cy="50" r="50" />
-         </clipPath>
-      </defs>
-      <g clipPath="url(#reportLogoClip)">
-         <g strokeWidth={10} fill="none" strokeLinecap="butt">
-            {/* Top Green Part */}
-            <g stroke="#78be20" transform="translate(0, -1.5)">
-               <path d="M 43 50 A 7 7 0 0 1 50 43 L 100 43" />
-               <path d="M 31 50 A 19 19 0 0 1 50 31 L 100 31" />
-               <path d="M 19 50 A 31 31 0 0 1 50 19 L 100 19" />
-               <path d="M 7 50 A 43 43 0 0 1 50 7 L 100 7" />
-            </g>
-            {/* Bottom Blue Part */}
-            <g stroke="#002f56" transform="translate(0, 1.5)">
-               <path d="M 57 50 A 7 7 0 0 1 50 57 L 0 57" />
-               <path d="M 69 50 A 19 19 0 0 1 50 69 L 0 69" />
-               <path d="M 81 50 A 31 31 0 0 1 50 81 L 0 81" />
-               <path d="M 93 50 A 43 43 0 0 1 50 93 L 0 93" />
-            </g>
-         </g>
-      </g>
+      <rect x="20" y="40" width="25" height="40" rx="4" fill="#10b981" />
+      <rect x="50" y="20" width="30" height="60" rx="4" fill="#3b82f6" />
+      <circle cx="32.5" cy="25" r="8" fill="#f59e0b" />
+      <rect x="60" y="35" width="10" height="5" rx="2" fill="white" />
+      <rect x="60" y="50" width="10" height="5" rx="2" fill="white" />
+      <rect x="60" y="65" width="10" height="5" rx="2" fill="white" />
+      <rect x="27.5" y="55" width="10" height="5" rx="2" fill="white" />
+      <rect x="27.5" y="65" width="10" height="5" rx="2" fill="white" />
    </svg>
 );
 
@@ -110,7 +95,7 @@ export const ReportGeneratorView: React.FC<ReportGeneratorViewProps> = ({ isDark
     `;
 
       const disclaimer = `<p style="color: #666; font-style: italic; font-size: 10pt; margin-bottom: 30px;">
-      Note: This document was exported from the HSS People Analytics Dashboard. Interactive charts may not be fully visible. 
+      Note: This document was exported from the [Organization Name] People Analytics Dashboard. Interactive charts may not be fully visible. 
       Please refer to the PDF version or live dashboard for visual analytics.
     </p>`;
 
@@ -126,7 +111,7 @@ export const ReportGeneratorView: React.FC<ReportGeneratorViewProps> = ({ isDark
 
       const link = document.createElement('a');
       link.href = url;
-      link.download = `HSS_Report_${timeRange.replace(' ', '_')}_FY2026.doc`;
+      link.download = `Report_${timeRange.replace(' ', '_')}_FY2026.doc`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -143,7 +128,7 @@ export const ReportGeneratorView: React.FC<ReportGeneratorViewProps> = ({ isDark
          const imgHeight = (canvas.height * imgWidth) / canvas.width;
          const pdf = new jsPDF('p', 'mm', [imgWidth, Math.max(imgHeight, pageHeight)]);
          pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-         pdf.save(`HSS_Report_${timeRange.replace(' ', '_')}_FY2026.pdf`);
+         pdf.save(`Report_${timeRange.replace(' ', '_')}_FY2026.pdf`);
       } catch (error) {
          console.error('PDF generation failed', error);
          alert('Failed to generate PDF. Please try again.');
@@ -364,23 +349,55 @@ export const ReportGeneratorView: React.FC<ReportGeneratorViewProps> = ({ isDark
                   {/* Background Decoration */}
                   <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
 
-                  {/* --- CONFIGURE STATE: Show empty/placeholder --- */}
+                  {/* --- CONFIGURE STATE: Skeleton Preview --- */}
                   {viewState === 'configure' && (
-                     <div className="text-center z-10 px-8">
-                        <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                           <FileText size={28} className="text-slate-400" />
+                     <div className="w-full max-w-lg z-10 space-y-6 px-4">
+                        <div className="text-center mb-6">
+                           <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-300 mb-1">Report Preview</h3>
+                           <p className="text-xs text-slate-400">Select modules and generate to see your report here.</p>
                         </div>
-                        <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-300 mb-2">Report Preview</h3>
-                        <p className="text-sm text-slate-400 max-w-xs mx-auto">Select your modules and click "Generate Report" to see a preview here.</p>
+                        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 p-6 space-y-5 opacity-40">
+                           <div className="flex items-center gap-4">
+                              <div className="w-12 h-12 rounded-lg skeleton-pulse"></div>
+                              <div className="flex-1 space-y-2">
+                                 <div className="h-5 w-48 rounded skeleton-pulse"></div>
+                                 <div className="h-3 w-32 rounded skeleton-pulse"></div>
+                              </div>
+                           </div>
+                           <div className="h-px bg-slate-200 dark:bg-slate-700"></div>
+                           <div className="grid grid-cols-4 gap-3">
+                              {[1,2,3,4].map(i => <div key={i} className="h-16 rounded-lg skeleton-pulse"></div>)}
+                           </div>
+                           <div className="h-36 rounded-lg skeleton-pulse"></div>
+                           <div className="space-y-2">
+                              <div className="h-3 w-full rounded skeleton-pulse"></div>
+                              <div className="h-3 w-5/6 rounded skeleton-pulse"></div>
+                              <div className="h-3 w-4/6 rounded skeleton-pulse"></div>
+                           </div>
+                        </div>
                      </div>
                   )}
 
-                  {/* --- 2. LOADING STATE --- */}
+                  {/* --- 2. LOADING STATE: Progress Stepper --- */}
                   {viewState === 'generating' && (
-                     <div className="text-center z-10">
-                        <Loader2 size={40} className="mx-auto text-[#002f56] dark:text-white animate-spin mb-4" />
-                        <h3 className="text-xl font-bold text-[#002f56] dark:text-white mb-2">Compiling Report...</h3>
-                        <p className="text-slate-500 dark:text-slate-400">Aggregating {selectedModules.length} data sources for {timeRange}</p>
+                     <div className="z-10 w-full max-w-sm text-center">
+                        <Loader2 size={36} className="mx-auto text-[#002f56] dark:text-white animate-spin mb-6" />
+                        <h3 className="text-xl font-bold text-[#002f56] dark:text-white mb-6">Compiling Report</h3>
+                        <div className="flex flex-col gap-3 text-left">
+                           {[
+                              { label: 'Collecting data', done: true },
+                              { label: 'Generating insights', done: true },
+                              { label: 'Formatting report', done: false },
+                           ].map((step, i) => (
+                              <div key={i} className="flex items-center gap-3">
+                                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                                    step.done ? 'bg-emerald-500 text-white' : 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 animate-pulse'
+                                 }`}>{step.done ? '✓' : i + 1}</div>
+                                 <span className={`text-sm font-medium ${step.done ? 'text-slate-400 line-through' : 'text-slate-700 dark:text-white'}`}>{step.label}</span>
+                              </div>
+                           ))}
+                        </div>
+                        <p className="text-xs text-slate-400 mt-4">Aggregating {selectedModules.length} modules for {timeRange}</p>
                      </div>
                   )}
 
@@ -393,10 +410,10 @@ export const ReportGeneratorView: React.FC<ReportGeneratorViewProps> = ({ isDark
                         <div className="px-12 py-10 border-b border-slate-100 flex justify-between items-center">
                            <div className="flex items-center gap-5">
                               <div className="relative">
-                                 <ReportLogo />
+                                 <OrgLogo />
                               </div>
                               <div>
-                                 <h1 className="text-3xl font-serif font-bold text-[#002f56] leading-none mb-1">Health Shared Services</h1>
+                                 <h1 className="text-3xl font-serif font-bold text-[#002f56] leading-none mb-1">[Organization Name]</h1>
                                  <p className="text-lg text-slate-500 font-medium">Executive Performance Report</p>
                               </div>
                            </div>
@@ -550,7 +567,7 @@ export const ReportGeneratorView: React.FC<ReportGeneratorViewProps> = ({ isDark
 
                         {/* Report Footer */}
                         <div className="mt-auto px-12 py-8 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400">
-                           <span>Generated by HSS People Analytics</span>
+                           <span>Generated by [Organization Name] People Analytics</span>
                            <span>Confidential & Proprietary</span>
                            <span>{new Date().toLocaleDateString()}</span>
                         </div>

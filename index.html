@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Health Shared Services Analytics</title>
+    <title>[Organization Name] Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -29,8 +29,18 @@
             animation: {
               'fade-in': 'fadeIn 0.5s ease-out',
               'slide-up': 'slideUp 0.5s ease-out',
+              'slide-left': 'slideLeft 0.4s ease-out',
+              'slide-right': 'slideRight 0.4s ease-out',
               'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               'float': 'float 6s ease-in-out infinite',
+              'float-delayed': 'float 8s ease-in-out 2s infinite',
+              'float-slow': 'float 10s ease-in-out 4s infinite',
+              'shimmer': 'shimmer 2.5s ease-in-out infinite',
+              'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+              'gradient-shift': 'gradientShift 8s ease-in-out infinite',
+              'draw-line': 'drawLine 1.5s ease-out forwards',
+              'spin-slow': 'spin 8s linear infinite',
+              'bounce-in': 'bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
             },
             keyframes: {
               fadeIn: {
@@ -41,9 +51,39 @@
                 '0%': { transform: 'translateY(20px)', opacity: '0' },
                 '100%': { transform: 'translateY(0)', opacity: '1' },
               },
+              slideLeft: {
+                '0%': { transform: 'translateX(30px)', opacity: '0' },
+                '100%': { transform: 'translateX(0)', opacity: '1' },
+              },
+              slideRight: {
+                '0%': { transform: 'translateX(-30px)', opacity: '0' },
+                '100%': { transform: 'translateX(0)', opacity: '1' },
+              },
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
                 '50%': { transform: 'translateY(-10px)' },
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' },
+              },
+              glowPulse: {
+                '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+                '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+              },
+              gradientShift: {
+                '0%, 100%': { backgroundPosition: '0% 50%' },
+                '50%': { backgroundPosition: '100% 50%' },
+              },
+              drawLine: {
+                '0%': { strokeDashoffset: '100' },
+                '100%': { strokeDashoffset: '0' },
+              },
+              bounceIn: {
+                '0%': { transform: 'scale(0.3)', opacity: '0' },
+                '50%': { transform: 'scale(1.05)' },
+                '70%': { transform: 'scale(0.9)' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
               }
             }
           }
@@ -82,6 +122,13 @@
         background: #64748b; 
       }
 
+      /* Shimmer effect for badges */
+      .shimmer-badge {
+        background: linear-gradient(90deg, #78be20 0%, #a3e635 25%, #78be20 50%, #a3e635 75%, #78be20 100%);
+        background-size: 200% 100%;
+        animation: shimmer 2.5s ease-in-out infinite;
+      }
+
       /* Glassmorphism Utilities */
       .glass-panel {
         background: rgba(255, 255, 255, 0.7);
@@ -92,6 +139,42 @@
       .dark .glass-panel {
         background: rgba(15, 23, 42, 0.7);
         border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* Premium glass card */
+      .glass-card-premium {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      /* Page transition wrapper */
+      .page-transition {
+        animation: fadeIn 0.4s ease-out, slideUp 0.4s ease-out;
+      }
+
+      /* Count-up animation helper */
+      .count-up { font-variant-numeric: tabular-nums; }
+
+      /* Theme toggle icon animation */
+      .theme-icon-enter {
+        animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+
+      /* Active pie segment pop */
+      .recharts-pie-sector:hover { transform-origin: center; transition: transform 0.2s ease-out; }
+
+      /* Skeleton loader */
+      .skeleton-pulse {
+        background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s ease-in-out infinite;
+      }
+      .dark .skeleton-pulse {
+        background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
+        background-size: 200% 100%;
       }
     </style>
   <script type="importmap">

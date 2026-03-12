@@ -54,32 +54,16 @@ const CLINICAL_DATA = [
    { name: 'Non-Clinical', value: 92451, rate: 0.6, color: '#78be20' },
 ];
 
-// Precise Interlocking HSS Logo Small
-const HSSIconSmall = () => (
+const OrgIconSmall = () => (
    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-         <clipPath id="overtimeLogoClip">
-            <circle cx="50" cy="50" r="50" />
-         </clipPath>
-      </defs>
-      <g clipPath="url(#overtimeLogoClip)">
-         <g strokeWidth={10} fill="none" strokeLinecap="butt">
-            {/* Top Green Part */}
-            <g stroke="#78be20" transform="translate(0, -1.5)">
-               <path d="M 43 50 A 7 7 0 0 1 50 43 L 100 43" />
-               <path d="M 31 50 A 19 19 0 0 1 50 31 L 100 31" />
-               <path d="M 19 50 A 31 31 0 0 1 50 19 L 100 19" />
-               <path d="M 7 50 A 43 43 0 0 1 50 7 L 100 7" />
-            </g>
-            {/* Bottom Blue Part */}
-            <g stroke="#002f56" transform="translate(0, 1.5)">
-               <path d="M 57 50 A 7 7 0 0 1 50 57 L 0 57" />
-               <path d="M 69 50 A 19 19 0 0 1 50 69 L 0 69" />
-               <path d="M 81 50 A 31 31 0 0 1 50 81 L 0 81" />
-               <path d="M 93 50 A 43 43 0 0 1 50 93 L 0 93" />
-            </g>
-         </g>
-      </g>
+      <rect x="20" y="40" width="25" height="40" rx="4" fill="#10b981" />
+      <rect x="50" y="20" width="30" height="60" rx="4" fill="#3b82f6" />
+      <circle cx="32.5" cy="25" r="8" fill="#f59e0b" />
+      <rect x="60" y="35" width="10" height="5" rx="2" fill="white" />
+      <rect x="60" y="50" width="10" height="5" rx="2" fill="white" />
+      <rect x="60" y="65" width="10" height="5" rx="2" fill="white" />
+      <rect x="27.5" y="55" width="10" height="5" rx="2" fill="white" />
+      <rect x="27.5" y="65" width="10" height="5" rx="2" fill="white" />
    </svg>
 );
 
@@ -98,13 +82,13 @@ export const OvertimeView: React.FC<OvertimeViewProps> = ({ item, onBack, isDark
                </button>
 
                <div className="flex items-center gap-4 pl-4 border-l border-slate-200 dark:border-slate-700">
-                  <HSSIconSmall />
+                  <OrgIconSmall />
                   <div>
                      <h1 className="text-xl font-bold text-[#002f56] dark:text-white leading-tight">Overtime (OT) hours</h1>
                      <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-[10px] font-bold text-[#78be20] uppercase tracking-widest">People Analytics</span>
                         <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                        <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 tracking-wide">Health Shared Services</span>
+                        <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 tracking-wide">[Organization Name]</span>
                      </div>
                   </div>
                </div>
