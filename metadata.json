@@ -1,0 +1,5 @@
+{
+  "name": "HSS HR Analytics Dashboard",
+  "description": "A reproduction of the HSS HR Analytics Index dashboard with interactive drill-down reports and Gemini AI insights.",
+  "requestFramePermissions": []
+}
